@@ -1,0 +1,21 @@
+create basic node.js server client, that supports work with two entitiess - task and solver - task and solver are in 1:n relation (task has one solver)
+
+create CRUD commands for each entity - separate controllers and dao
+
+use mongoDB (mongoose) as persistent storage
+
+use ajv to validate user inputs
+
+task should have
+- title - string (required)
+- description - string (optional)
+- dueDate - The date by which the task must be completed (optional, must be current date or date in the future)
+- created - The time stamp when the task was created
+- priority - Priority of the task (Low/Medium/High)
+- isCompleted - boolean
+- parentTaskId - identifier of parent task - indicates wheter the task is a subtask - pointer to its own entity
+- notes - Array of objects {TimeStamp, String}
+- solverId - Identifier of person assigned to the task (foreign key)
+
+solver should have
+- name - required
