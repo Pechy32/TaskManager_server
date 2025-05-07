@@ -1,26 +1,31 @@
 import express from 'express';
-import { Task } from '../model/taskModel.js';
-import { validate, taskSchema } from '../validation/ajvSchemas.js';
+import { 
+  createTask, 
+  getAllTasks, 
+  getTaskById, 
+  updateTask, 
+  deleteTask 
+} from '../services/taskService.js';
 
 const router = express.Router();
 
 // Create a new task
 router.post('/', async (req, res) => {
-  const { valid, errors } = validate(taskSchema, req.body);
-  if (!valid) return res.status(400).json({ errors });
   try {
-    const task = new Task(req.body);
-    await task.save();
+    const task = await createTask(req.body);
     res.status(201).json(task);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ errors: error.errors });
+    }
+    res.status(500).json({ message: error.message });
   }
 });
 
 // Get all tasks
 router.get('/', async (req, res) => {
   try {
-    const tasks = await Task.find().populate('solverId');
+    const tasks = await getAllTasks();
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -30,7 +35,7 @@ router.get('/', async (req, res) => {
 // Get a specific task
 router.get('/:id', async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id).populate('solverId');
+    const task = await getTaskById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
     res.json(task);
   } catch (error) {
@@ -40,23 +45,23 @@ router.get('/:id', async (req, res) => {
 
 // Update a task
 router.put('/:id', async (req, res) => {
-  const { valid, errors } = validate(taskSchema, req.body);
-  if (!valid) return res.status(400).json({ errors });
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('solverId');
+    const task = await updateTask(req.params.id, req.body);
     if (!task) return res.status(404).json({ message: 'Task not found' });
     res.json(task);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ errors: error.errors });
+    }
+    res.status(500).json({ message: error.message });
   }
 });
 
 // Delete a task
 router.delete('/:id', async (req, res) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
-    if (!task) return res.status(404).json({ message: 'Task not found' });
-    res.json({ message: 'Task deleted' });
+    const message = await deleteTask(req.params.id);
+    res.json({ message });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
