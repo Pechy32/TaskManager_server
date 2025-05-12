@@ -5,7 +5,7 @@ import {
   getSolverById, 
   updateSolver, 
   deleteSolver 
-} from '../services/solverService.js';
+} from '../service/solverService.js';
 
 const router = express.Router();
 
