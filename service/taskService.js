@@ -9,12 +9,12 @@ export const createTask = async (data) => {
 
 // Get all tasks
 export const getAllTasks = async () => {
-  return await Task.find().populate('solverId');
+  return await Task.find().populate('solver');
 };
 
 // Get a specific task by ID
 export const getTaskById = async (id) => {
-  return await Task.findById(id).populate('solverId');
+  return await Task.findById(id).populate('solver');
 };
 
 // Update a task by ID
@@ -22,7 +22,7 @@ export const updateTask = async (id, data) => {
   const task = await Task.findByIdAndUpdate(id, data, {
     new: true,
     runValidators: true, // Ensure validation runs on update
-  }).populate('solverId');
+  }).populate('solver');
   return task;
 };
 

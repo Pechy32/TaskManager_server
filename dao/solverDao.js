@@ -1,4 +1,4 @@
-import { Solver } from '../models/solver.js';
+import { Solver } from '../model/solverModel.js';
 
 export const createSolver = async (data) => {
   const solver = new Solver(data);

@@ -12,7 +12,7 @@ const taskSchema = new mongoose.Schema({
   isCompleted: { type: Boolean, default: false },
   parentTaskId: { type: mongoose.Schema.Types.ObjectId, ref: 'Task' },
   notes: [{ timestamp: { type: Date, default: Date.now }, note: { type: String } }],
-  solverId: { type: mongoose.Schema.Types.ObjectId, ref: 'Solver' }
+  solver: { type: mongoose.Schema.Types.ObjectId, ref: 'Solver' }
 });
 
 export const Task = mongoose.model('Task', taskSchema);

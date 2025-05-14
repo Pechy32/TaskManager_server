@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import taskRouter from './controller/taskController.js';
-import solverRouter from './controller/solverController.js';
+import taskController from './controller/taskController.js';
+import solverController from './controller/solverController.js';
 
 // Create Express app
 const app = express();
@@ -25,9 +25,9 @@ mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
 
-// Routers
-app.use('/tasks', taskRouter);
-app.use('/solvers', solverRouter);
+// Controllers
+app.use('/tasks', taskController);
+app.use('/solvers', solverController);
 
 // Start server
 app.listen(PORT, () => {
