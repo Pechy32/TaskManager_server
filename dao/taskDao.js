@@ -5,16 +5,16 @@ export const createTask = async (data) => {
   return await task.save();
 };
 
-export const getTasks = async () => {
+export const getAllTasks = async () => {
   return await Task.find().populate('solver');
 };
 
-export const getTaskById = async (id) => {
+export const getTask = async (id) => {
   return await Task.findById(id).populate('solver');
 };
 
 export const updateTask = async (id, data) => {
-  return await Task.findByIdAndUpdate(id, data, { new: true }).populate('solver');
+  return await Task.findByIdAndUpdate(id, data, { new: true, runValidators: true }).populate('solver');
 };
 
 export const deleteTask = async (id) => {
