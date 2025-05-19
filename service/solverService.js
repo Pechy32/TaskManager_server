@@ -1,7 +1,7 @@
 import { createSolver, getAllSolvers, getSolver, updateSolver, deleteSolver } from "../dao/solverDao.js"
 
 // API handler for creating a solver
-export async function createSolverHandler (req, res) {
+export async function createSolverService (req, res) {
   try {
     const solver = await createSolver(req.body);
     res.status(201).json(solver);
@@ -14,7 +14,7 @@ export async function createSolverHandler (req, res) {
 }
 
 // API handler for getting all solvers
-export async function getAllSolversHandler (req, res) {
+export async function getAllSolversService (req, res) {
   try {
     const solvers = await getAllSolvers();
     res.json(solvers);
@@ -24,7 +24,7 @@ export async function getAllSolversHandler (req, res) {
 }
 
 // API handler for getting solver by id
-export async function getSolverHandler (req, res) {
+export async function getSolverService (req, res) {
   try {
     const solver = await getSolver(req.params.id);
     if (!solver) return res.status(404).json({ message: 'Solver not found' });
@@ -35,7 +35,7 @@ export async function getSolverHandler (req, res) {
 }
 
 // API handler for updating solver
-export async function updateSolverHandler (req, res) {
+export async function updateSolverService (req, res) {
   try {
     const solver = await updateSolver(req.params.id, req.body);
     if (!solver) return res.status(404).json({ message: 'Solver not found' });
@@ -49,7 +49,7 @@ export async function updateSolverHandler (req, res) {
 }
 
 // API handler for deleting solver
-export async function deleteSolverHandler (req, res) {
+export async function deleteSolverService (req, res) {
   try {
     const message = await deleteSolver(req.params.id);
     res.json({ message });
