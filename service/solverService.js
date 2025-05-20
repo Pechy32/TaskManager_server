@@ -1,4 +1,5 @@
 import { createSolver, getAllSolvers, getSolver, updateSolver, deleteSolver } from "../dao/solverDao.js"
+import mongoose from 'mongoose';
 
 // API handler for creating a solver
 export async function createSolverService (req, res) {
@@ -25,6 +26,9 @@ export async function getAllSolversService (req, res) {
 
 // API handler for getting solver by id
 export async function getSolverService (req, res) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid solver ID' });
+  }
   try {
     const solver = await getSolver(req.params.id);
     if (!solver) return res.status(404).json({ message: 'Solver not found' });
@@ -36,6 +40,9 @@ export async function getSolverService (req, res) {
 
 // API handler for updating solver
 export async function updateSolverService (req, res) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid solver ID' });
+  }
   try {
     const solver = await updateSolver(req.params.id, req.body);
     if (!solver) return res.status(404).json({ message: 'Solver not found' });
@@ -50,6 +57,9 @@ export async function updateSolverService (req, res) {
 
 // API handler for deleting solver
 export async function deleteSolverService (req, res) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid solver ID' });
+  }
   try {
     const message = await deleteSolver(req.params.id);
     res.json({ message });

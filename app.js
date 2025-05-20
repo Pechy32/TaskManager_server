@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
 import taskController from './controller/taskController.js';
 import solverController from './controller/solverController.js';
 
@@ -9,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Database connection
 mongoose.connect('mongodb://localhost:27017/task-solver', {
