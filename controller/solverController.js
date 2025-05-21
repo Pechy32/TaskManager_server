@@ -1,11 +1,10 @@
 import express from 'express';
-import { 
-  createSolverService, 
-  getAllSolversService, 
-  getSolverService, 
-  updateSolverService, 
-  deleteSolverService 
-} from '../service/solverService.js';
+
+import { createSolverService } from '../service/solver/createSolverService.js';
+import { getAllSolversService } from '../service/solver/getAllSolversService.js';
+import { getSolverService } from '../service/solver/getSolverService.js';
+import { updateSolverService } from '../service/solver/updateSolverService.js';
+import { deleteSolverService } from '../service/solver/deleteSolverService.js';
 
 const router = express.Router();
 

@@ -1,11 +1,9 @@
 import express from 'express';
-import { 
-  createTaskService, 
-  getAllTasksService, 
-  getTaskService, 
-  updateTaskService, 
-  deleteTaskService 
-} from '../service/taskService.js';
+import { createTaskService } from '../service/task/createTaskService.js';
+import { getAllTasksService } from '../service/task/getAllTasksService.js';
+import { getTaskService } from '../service/task/getTaskService.js';
+import { updateTaskService } from '../service/task/updateTaskService.js';
+import { deleteTaskService } from '../service/task/deleteTaskService.js';
 
 const router = express.Router();
 
