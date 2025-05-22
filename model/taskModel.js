@@ -11,7 +11,7 @@ const taskSchema = new mongoose.Schema({
   priority: { type: String, enum: ['Low', 'Medium', 'High'] },
   isCompleted: { type: Boolean, default: false },
   parentTaskId: { type: mongoose.Schema.Types.ObjectId, ref: 'Task' },
-  notes: [{ timestamp: { type: Date, default: Date.now }, note: { type: String } }],
+  notes: [{ timestamp: { type: Date, default: Date.now }, note: { type: String, required: true } }],
   solver: { type: mongoose.Schema.Types.ObjectId, ref: 'Solver' }
 });
 
