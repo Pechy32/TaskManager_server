@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import taskController from './controller/taskController.js';
 import solverController from './controller/solverController.js';
+import { setupSwagger } from './swagger/swagger.js';
 
 // Create Express app
 const app = express();
@@ -27,6 +28,9 @@ mongoose.connection.on('error', (err) => {
 // Controllers
 app.use('/tasks', taskController);
 app.use('/solvers', solverController);
+
+// Swagger documentation setup
+setupSwagger(app);
 
 // Start server
 app.listen(PORT, () => {
