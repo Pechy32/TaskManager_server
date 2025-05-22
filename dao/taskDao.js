@@ -1,10 +1,5 @@
 import { Task } from '../model/taskModel.js';
 
-export const createTask = async (data) => {
-  const task = new Task(data);
-  return await task.save();
-};
-
 export const getAllTasks = async (filters = {}, options = {}) => {
   const { sort = [] } = options;
 
@@ -66,6 +61,11 @@ export const getAllTasks = async (filters = {}, options = {}) => {
   }
 
   return await Task.aggregate(aggregation);
+};
+
+export const createTask = async (data) => {
+  const task = new Task(data);
+  return await task.save();
 };
 
 export const getTask = async (id) => {
