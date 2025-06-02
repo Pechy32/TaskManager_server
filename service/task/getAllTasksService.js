@@ -1,4 +1,6 @@
 import { getAllTasks } from '../../dao/taskDao.js';
+import mongoose from 'mongoose';
+const { Types } = mongoose;
 
 // API handler for getting all tasks including filters and sorting
 export async function getAllTasksService(req, res) {
@@ -36,6 +38,17 @@ export async function getAllTasksService(req, res) {
     if (req.query.dueAfter) {
       filters.dueDate = filters.dueDate || {};
       filters.dueDate.$gte = new Date(req.query.dueAfter);
+    }
+
+     // --- parentTaskId parameter ---
+    if (req.query.parentTaskId) {
+      if (req.query.parentTaskId === 'null') {
+        filters.parentTaskId = null;
+      } else if (!Types.ObjectId.isValid(req.query.parentTaskId)) {
+        return res.status(400).json({ message: "Invalid parentTaskId. Must be a valid MongoDB ObjectId or 'null'." });
+      } else {
+        filters.parentTaskId = new Types.ObjectId(req.query.parentTaskId);
+      }
     }
 
     // --- Sorting parameters ---
