@@ -3,10 +3,21 @@ import mongoose from 'mongoose';
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
-  dueDate: { type: Date, validate: {
-    validator: (value) => !value || value >= new Date(),
-    message: 'Due date must be today or in the future',
-  }},
+  dueDate: {
+    type: Date,
+    validate: {
+      // Custom validator to ensure dueDate is today or in the future
+      validator: (value) => {
+        if (!value) return true; 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+        const dueDateWithoutTime = new Date(value);
+        dueDateWithoutTime.setHours(0, 0, 0, 0);
+        return dueDateWithoutTime >= today;
+      },
+      message: 'Due date must be today or in the future',
+    },
+  },
   created: { type: Date, default: Date.now },
   priority: { type: String, enum: ['Low', 'Medium', 'High'] },
   isCompleted: { type: Boolean, default: false },

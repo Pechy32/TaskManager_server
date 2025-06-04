@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
-app.use(cors()); // ← umožní požadavky z jiného původu (např. localhost:3000)
+app.use(cors()); // allows all origins by default
 
 // Database connection
 mongoose.connect('mongodb://localhost:27017/task-solver', {
