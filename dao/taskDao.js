@@ -13,54 +13,74 @@ export const getAllTasks = async (filters = {}, options = {}) => {
       priorityOrder: {
         $switch: {
           branches: [
-            { case: { $eq: ['$priority', 'Low'] }, then: 1 },
-            { case: { $eq: ['$priority', 'Medium'] }, then: 2 },
-            { case: { $eq: ['$priority', 'High'] }, then: 3 },
+            { case: { $eq: ['$priority', 'Low'] }, then: 2 },
+            { case: { $eq: ['$priority', 'Medium'] }, then: 3 },
+            { case: { $eq: ['$priority', 'High'] }, then: 4 },
           ],
-          default: 4,
+          default: 1, // Default for null/undefined priority
         },
       },
     },
   });
 
-  // priorityOrder field is added to the aggregation pipeline
+  // Helper function to add dueDateExists field - null values are at the end
+  const addDueDateExistsField = () => ({
+    $addFields: {
+      dueDateExists: {
+        $cond: {
+          if: { $ne: ['$dueDate', null] }, 
+          then: 0, 
+          else: 1, 
+        },
+      },
+    },
+  });
+
+  
+  let needsDueDateExistsField = false;
+
+  // final sorting object
   for (const { field, order } of sort) {
     if (field === 'priority') {
       needsPriorityOrder = true;
       finalSort['priorityOrder'] = order === 'desc' ? -1 : 1;
+    } else if (field === 'dueDate') {
+      needsDueDateExistsField = true; 
+      finalSort['dueDateExists'] = order === 'asc' ? 1 : -1; 
+      finalSort[field] = order === 'asc' ? 1 : -1;
     } else {
       finalSort[field] = order === 'desc' ? -1 : 1;
     }
   }
 
-  // Default sorting if no sort is provided
-  // dueDate form nost recent to oldest, priority from highest to lowest, created from most recent to oldest
+  // Default sorting if no specific fields are provided
   if (Object.keys(finalSort).length === 0) {
     needsPriorityOrder = true;
+    needsDueDateExistsField = true; 
     Object.assign(finalSort, {
-      dueDate: 1,
-      priorityOrder: -1,
-      created: -1,
+      dueDateExists: 1, 
+      dueDate: 1,       
+      priorityOrder: -1, 
+      created: -1,       
     });
   }
 
-  // Add priorityOrder field to the aggregation pipeline if needed
+  // Add fields for priorityOrder and dueDateExists if needed
+  if (needsDueDateExistsField) {
+    aggregation.push(addDueDateExistsField());
+  }
   if (needsPriorityOrder) {
     aggregation.push(addPriorityOrderField());
   }
 
-  // Pagination
-  aggregation.push({ $sort: finalSort });
-
-  if (options.skip) {
-    aggregation.push({ $skip: options.skip });
+  // Sort the results based on the finalSort object
+  if (Object.keys(finalSort).length > 0) {
+    aggregation.push({ $sort: finalSort });
   }
 
-  if (options.limit) {
-    aggregation.push({ $limit: options.limit });
-  }
-
-  return await Task.aggregate(aggregation);
+  // Agregation
+  const tasks = await Task.aggregate(aggregation);
+  return tasks;
 };
 
 export const createTask = async (data) => {
